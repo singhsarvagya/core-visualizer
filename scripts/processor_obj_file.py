@@ -231,7 +231,7 @@ class ProcessorGraph:
 
     def map(self, ax):
         outer_rec = Rectangle(xy=(self.x_coordinate + 100, self.y_coordinate + 100), width=800,
-                              height=800, name=self.name, picker=True, facecolor='none',
+                              height=800,  picker=True, facecolor='none',
                               edgecolor='#d3d3d3', linewidth=2)
         ax.add_artist(outer_rec)
         self.patches_list += [Rectangle((self.x_coordinate+100, self.y_coordinate+100), 200, 0),

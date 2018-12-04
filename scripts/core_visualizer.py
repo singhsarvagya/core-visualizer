@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import simpledialog
+import argparse
 import read_data_file as rdf
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -8,12 +9,16 @@ from processor_obj_file import Processor
 import subprocess
 from tkinter import messagebox, filedialog
 import os
+import xml.etree.ElementTree as ET
 from terminal_gui import TerminalGUI
 plt.style.use('bmh')
 
 PM_FIGURE_ID = 1
 SPM_FIGURE_ID = 2
 
+parser = argparse.ArgumentParser()
+parser.add_argument('settings_file_loc')
+args = parser.parse_args()
 
 class ProcessorMap:
     def __init__(self, root):

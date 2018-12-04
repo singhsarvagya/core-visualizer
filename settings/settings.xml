@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<settings>
+	<data_file_loc>
+		~/core-visualizer/sample_data/data_recorder_out.txt
+	</data_file_loc>
+	<processor_coordinate_file_loc>
+		~/core-visualizer/settings/processor_coordinate.csv
+	</processor_coordinate_file_loc>
+</settings>
