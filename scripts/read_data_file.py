@@ -1,7 +1,7 @@
 from processor_obj_file import Processor
 total_processors = 100
-data_recoder_out_file = "sample_data/data_recorder_out.txt"
-processor_coordinate_file = "settings/processor_coordinate.csv"
+data_recoder_out_file = "~/core-visualizer/sample_data/data_recorder_out.txt"
+processor_coordinate_file = "~/core-visualizer/settings/processor_coordinate.csv"
 
 def read_data_recoder_out(processor_obj_list):
     '''
