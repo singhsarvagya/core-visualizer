@@ -17,71 +17,15 @@ class Processor:
 
     def __init__(self, name):
         self.name = name
-        self.activity = []
-        self.utilization = []
-        self.stalled_state = []
-        self.power_mW = []
-        self.input_buffers_0_num_writes = []
-        self.input_buffers_0_num_reads = []
-        self.input_buffers_1_num_writes = []
-        self.input_buffers_1_num_reads = []
+        self.data = {}
         self.processor_graph_obj = None
 
-    def access_activity(self, time):
+    def access_processor_data(self, time, data_field): 
         if time in Processor.time_period_index_dic:
             index = Processor.time_period_index_dic[time]
-            return self.activity[index]
+            return self.data[data_field][index]
         else:
-            raise Exception("Activity data for time %s ps not recorded" % time)
-
-    def access_utilization(self, time):
-        if time in Processor.time_period_index_dic:
-            index = Processor.time_period_index_dic[time]
-            return self.utilization[index]
-        else:
-            raise Exception("Utilization data for time %s ps not recorded" % time)
-
-    def access_stalled_state(self, time):
-        if time in Processor.time_period_index_dic:
-            index = Processor.time_period_index_dic[time]
-            return self.stalled_state[index]
-        else:
-            raise Exception("Stalled state data for time %s ps not recorded" % time)
-
-    def access_power_mW(self, time):
-        if time in Processor.time_period_index_dic:
-            index = Processor.time_period_index_dic[time]
-            return self.power_mW[index]
-        else:
-            raise Exception("Power data for time %s ps not recorded" % time)
-
-    def access_input_buffers_0_num_writes(self, time):
-        if time in Processor.time_period_index_dic:
-            index = Processor.time_period_index_dic[time]
-            return self.input_buffers_0_num_writes[index]
-        else:
-            raise Exception("Input buffer 0 num write data for time %s ps not recorded" % time)
-
-    def access_input_buffers_0_num_reads(self, time):
-        if time in Processor.time_period_index_dic:
-            index = Processor.time_period_index_dic[time]
-            return self.input_buffers_0_num_reads[index]
-        else:
-            raise Exception("Input buffer 0 num read d for time %s ps not recorded" % time)
-
-    def access_input_buffers_1_num_writes(self, time):
-        if time in Processor.time_period_index_dic:
-            index = Processor.time_period_index_dic[time]
-            return self.input_buffers_1_num_writes[index]
-        else:
-            raise Exception("Input buffer 1 num write data for time %s ps not recorded" % time)
-
-    def access_input_buffers_1_num_reads(self, time):
-        if time in Processor.time_period_index_dic:
-            index = Processor.time_period_index_dic[time]
-            return self.input_buffers_1_num_reads[index]
-        else:
-            raise Exception("Input buffer 1 num read data for time %s ps not recorded" % time)
+            raise Exception("%s data for time %s ps not recorded" % data_field % time)
 
     @staticmethod
     def initialize_time_period_index_dic(time):
@@ -98,60 +42,15 @@ class Processor:
             Processor.processor_index_dic[data[i]] = i-2
 
     @staticmethod
-    def initialize_activity(processor_object_list, data, time):
+    def register_processor_data(processor_object_list, data):
+        data_field = data[0]
+        time = data[1]
         time_index = Processor.time_period_index_dic[time]
         for i in range(2, len(data)):
             processor = processor_object_list[i-2]
-            processor.activity.insert(time_index, float(data[i]))
-
-    @staticmethod
-    def initialize_utilization(processor_object_list, data, time):
-        time_index = Processor.time_period_index_dic[time]
-        for i in range(2, len(data)):
-            processor = processor_object_list[i-2]
-            processor.utilization.insert(time_index, float(data[i]))
-
-    @staticmethod
-    def initialize_stalled_state(processor_object_list, data, time):
-        time_index = Processor.time_period_index_dic[time]
-        for i in range(2, len(data)):
-            processor = processor_object_list[i-2]
-            processor.stalled_state.insert(time_index, int(data[i]))
-
-    @staticmethod
-    def initialize_power_mW(processor_object_list, data, time):
-        time_index = Processor.time_period_index_dic[time]
-        for i in range(2, len(data)):
-            processor = processor_object_list[i-2]
-            processor.power_mW.insert(time_index, float(data[i]))
-
-    @staticmethod
-    def initialize_input_buffer_0_num_writes(processor_object_list, data, time):
-        time_index = Processor.time_period_index_dic[time]
-        for i in range(2, len(data)):
-            processor = processor_object_list[i-2]
-            processor.input_buffers_0_num_writes.insert(time_index, int(data[i]))
-
-    @staticmethod
-    def initialize_input_buffer_0_num_reads(processor_object_list, data, time):
-        time_index = Processor.time_period_index_dic[time]
-        for i in range(2, len(data)):
-            processor = processor_object_list[i-2]
-            processor.input_buffers_0_num_reads.insert(time_index, int(data[i]))
-
-    @staticmethod
-    def initialize_input_buffer_1_num_writes(processor_object_list, data, time):
-        time_index = Processor.time_period_index_dic[time]
-        for i in range(2, len(data)):
-            processor = processor_object_list[i-2]
-            processor.input_buffers_1_num_writes.insert(time_index, int(data[i]))
-
-    @staticmethod
-    def initialize_input_buffer_1_num_reads(processor_object_list, data, time):
-        time_index = Processor.time_period_index_dic[time]
-        for i in range(2, len(data)):
-            processor = processor_object_list[i-2]
-            processor.input_buffers_1_num_reads.insert(time_index, int(data[i]))
+            if data_field not in processor.data:  
+                processor.data[data_field] = []
+            processor.data[data_field].insert(time_index, float(data[i]))
 
     def map_processor_graph_object(self, x_coordinate, y_coordinate, ax):
         self.processor_graph_obj = ProcessorGraph(x_coordinate, y_coordinate, self.name)
@@ -252,8 +151,8 @@ class ProcessorGraph:
         list2 = []
         for processor in processor_obj_list:
             stalled_state_patch = processor.processor_graph_obj.patches_list[4]
-            time_index = Processor.time_period_index_dic[time]
-            if processor.stalled_state[time_index] == 1:
+            # time_index = Processor.time_period_index_dic[time]
+            if processor.access_processor_data(time, "stalled") == 1:
                 list1 += [stalled_state_patch]
             else:
                 list2 += [stalled_state_patch]
@@ -265,21 +164,21 @@ class ProcessorGraph:
         list2 = []
         for processor in processor_object_list:
 
-            num_write_0 = processor.access_input_buffers_0_num_writes(time)
+            num_write_0 = processor.access_processor_data(time, 'input_buffers[0].num_writes')
             processor.processor_graph_obj.patches_list[0].set_height(float(num_write_0)*700/ProcessorGraph.max_buffer_value)
             num_write_0_graph_obj  = processor.processor_graph_obj.patches_list[0]
 
-            num_write_1 = processor.access_input_buffers_1_num_writes(time)
+            num_write_1 = processor.access_processor_data(time, 'input_buffers[1].num_writes')
             processor.processor_graph_obj.patches_list[2].set_height(float(num_write_1)*700/ProcessorGraph.max_buffer_value)
             num_write_1_graph_obj = processor.processor_graph_obj.patches_list[2]
 
             list1 += [num_write_0_graph_obj, num_write_1_graph_obj]
 
-            num_read_0 = processor.access_input_buffers_0_num_reads(time)
+            num_read_0 = processor.access_processor_data(time, 'input_buffers[0].num_reads')
             processor.processor_graph_obj.patches_list[1].set_height(float(num_read_0)*700/ProcessorGraph.max_buffer_value)
             num_read_0_graph_obj = processor.processor_graph_obj.patches_list[1]
 
-            num_read_1 = processor.access_input_buffers_1_num_reads(time)
+            num_read_1 = processor.access_processor_data(time, 'input_buffers[1].num_reads')
             processor.processor_graph_obj.patches_list[3].set_height(float(num_read_1)*700/ProcessorGraph.max_buffer_value)
             num_read_1_graph_obj = processor.processor_graph_obj.patches_list[3]
 

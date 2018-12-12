@@ -20,19 +20,11 @@ def read_data_recoder_out(processor_obj_list,
     for i in range(2, 2+total_processors):
         processor_obj_list.insert(i-2, Processor(x[i]))
 
-    method = {'utilization': Processor.initialize_utilization,
-              'activity': Processor.initialize_activity,
-              'stalled': Processor.initialize_stalled_state,
-              'power_mW': Processor.initialize_power_mW,
-              'input_buffers[0].num_writes': Processor.initialize_input_buffer_0_num_writes,
-              'input_buffers[0].num_reads': Processor.initialize_input_buffer_0_num_reads,
-              'input_buffers[1].num_writes': Processor.initialize_input_buffer_1_num_writes,
-              'input_buffers[1].num_reads': Processor.initialize_input_buffer_1_num_reads}
     for i in range(1, len(lines)):
         data = lines[i].rstrip().split(' ')
         time = data[1]
         Processor.initialize_time_period_index_dic(time)
-        method[data[0]](processor_obj_list, data, time)
+        Processor.register_processor_data(processor_obj_list, data)
 
 
 def plot_processor(processor_obj_list,
