@@ -10,34 +10,34 @@
 		value = "./settings/processor_coordinate.csv"/>
 
 	<graph_settings>
-		<num_of_graphs value="4">
-		<graph>
-			<id value = "1"/>
-			<y_label value = "Activity">
-			<x_label value = "Time(ps)">
-			<scale_factor value = "2.5">
-			<data_field value = "activity"/>
-		</graph>
-		<graph>
-			<id value = "2"/>
-			<y_label value = "Stalled State">
-			<x_label value = "Time(ps)">
-			<scale_factor value = "2.5">
-			<data_field value = "stalled"/>
-		</graph>
-		<graph>
-			<id value = "3"/>
-			<y_label value = "Utilization">
-			<x_label value = "Time(ps)">
-			<scale_factor value = "2.5">
-			<data_field value = "utilization"/>
-		</graph>
-		<graph>
-			<id value = "4"/>
-			<y_label value = "Power (mW)">
-			<x_label value = "Time(ps)">
-			<scale_factor value = "0.1">
-			<data_field value = "power_mW"/>
-		</graph>
+		<num_of_graphs value="4"/>
+		<graph
+			id = "2"
+			y_label = "Activity"
+			x_label = "Time(ps)"
+			scale_factor = "2.5"
+			data_field = "activity"
+		/>
+		<graph
+			id = "1"
+			y_label = "Stalled State"
+			x_label = "Time(ps)"
+			scale_factor = "2.5"
+			data_field = "stalled"
+		/>
+		<graph
+			id = "3"
+			y_label = "Utilization"
+			x_label = "Time(ps)"
+			scale_factor = "2.5"
+			data_field = "utilization"
+		/>
+		<graph
+			id = "4"
+			y_label = "Power (mW)"
+			x_label = "Time(ps)"
+			scale_factor = "0.1"
+			data_field = "power_mW"
+		/>
 	</graph_settings>
 </settings>

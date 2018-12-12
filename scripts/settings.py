@@ -40,3 +40,17 @@ class Settings:
 				messagebox.askokcancel("Error", "Processor Coordinate file does not exist.") 
 				sys.exit(0)		
 			return atype.get('value')
+
+	def get_graphs(self):
+		# function returns the settings for the 
+		# processor graphs 
+		graph_settings = []
+
+		# gathering all the graph objects from the xml 
+		for graph in self.tree.iter('graph'):
+			graph_settings.append( graph.attrib)
+
+		# reordering the graph settings based on their id 
+		graph_settings = sorted(graph_settings, key=lambda k: k['id'])
+		
+		return graph_settings

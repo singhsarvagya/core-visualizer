@@ -1,5 +1,6 @@
 # tkinter GUI libraries
 # TODO add logo to the icon 
+# add verticle marker to the graphs 
 from tkinter import *
 from tkinter import messagebox
 
@@ -32,13 +33,14 @@ class CoreVisualizer:
         # terminal window for GUI
         self.root = Tk()
 
+        # settings object
+        self.settings = Settings(args.settings_file_loc)
+
         # objects to handle processor buffer state 
         # and processor graph visualiztions 
         self.processor_map = ProcessorMap(self.root)        
-        self.processor_graphs = ProcessorGraphs(self.root)
-
-        # settings object
-        self.settings = Settings(args.settings_file_loc)
+        self.processor_graphs = ProcessorGraphs(self.root,
+                                                self.settings.get_graphs())
 
         # TODO get title from the setting files 
         self.gui = GUI(self.root,
