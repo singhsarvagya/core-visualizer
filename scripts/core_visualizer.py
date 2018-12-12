@@ -55,11 +55,11 @@ class CoreVisualizer:
 
 
     def get_processor_name(self, x, y): 
-        print (str(x)+","+str(y)+"\n")
         for processor in self.processor_obj_list:
+            # TODO make into one function 
             proc_x = processor.get_processor_graph_obj_x()
             proc_y = processor.get_processor_graph_obj_y()
-            print (str(proc_x)+","+str(proc_y))
+            # TODO remove dependency on the 100 
             if proc_x == x-100 and proc_y == y-100: 
                 return processor.name
         return None 
@@ -89,8 +89,8 @@ if __name__ == '__main__':
         patch = event.artist
         if event.mouseevent.inaxes and event.mouseevent.button == 1\
                 and not event.mouseevent.dblclick:
+            # TODO make into one function 
             proc_name = core_visualizer.get_processor_name(patch.xy[0], patch.xy[1])
-            print (proc_name)
             core_visualizer.update_graphs(proc_name)
             # graph.fig.canvas.draw()
             pass

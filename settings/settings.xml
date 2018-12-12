@@ -1,18 +1,43 @@
 <?xml version="1.0"?>
 
 <settings>
-	<project_title value="The Core Visualizer"/>
+	<project_title value = "The Core Visualizer"/>
+
 	<data_recorder_out_file_loc 
-		value="./sample_data/data_recorder_out.txt"/>
+		value = "./sample_data/data_recorder_out.txt"/>
+
 	<processor_coordinate_file_loc 
-		value="./settings/processor_coordinate.csv"/>
-	<graphs>
+		value = "./settings/processor_coordinate.csv"/>
+
+	<graph_settings>
+		<num_of_graphs value="4">
 		<graph>
-			<id>1</id>
-			<x_lable></x_lable>
-			<y_lable></y_lable>
-			<scale_factor></scale_factor>
+			<id value = "1"/>
+			<y_label value = "Activity">
+			<x_label value = "Time(ps)">
+			<scale_factor value = "2.5">
+			<data_field value = "activity"/>
 		</graph>
-		
-	</graphs>
+		<graph>
+			<id value = "2"/>
+			<y_label value = "Stalled State">
+			<x_label value = "Time(ps)">
+			<scale_factor value = "2.5">
+			<data_field value = "stalled"/>
+		</graph>
+		<graph>
+			<id value = "3"/>
+			<y_label value = "Utilization">
+			<x_label value = "Time(ps)">
+			<scale_factor value = "2.5">
+			<data_field value = "utilization"/>
+		</graph>
+		<graph>
+			<id value = "4"/>
+			<y_label value = "Power (mW)">
+			<x_label value = "Time(ps)">
+			<scale_factor value = "0.1">
+			<data_field value = "power_mW"/>
+		</graph>
+	</graph_settings>
 </settings>

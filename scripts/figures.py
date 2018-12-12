@@ -122,7 +122,7 @@ class ProcessorGraphs:
 
     def update(self, proc_name, processor_obj_list):
         processor_obj = Processor.get_processor_obj(proc_name, processor_obj_list)
-        if processor_obj_list:
+        if processor_obj:
             self.plot_activity_graph(processor_obj)
             self.plot_utilization(processor_obj)
             self.plot_stalled_state(processor_obj)
