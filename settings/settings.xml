@@ -7,4 +7,13 @@
 	<processor_coordinate_file_loc>
 		~/core-visualizer/settings/processor_coordinate.csv
 	</processor_coordinate_file_loc>
+	<graphs>
+		<graph>
+			<id>1</id>
+			<x_lable></x_lable>
+			<y_lable></y_lable>
+			<scale_factor></scale_factor>
+		</graph>
+		
+	</graphs>
 </settings>
