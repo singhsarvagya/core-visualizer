@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.collections import PatchCollection
 import read_data_file as rdf
+from processor_obj_file import Processor
+
 
 PM_FIGURE_ID = 1
 SPM_FIGURE_ID = 2
@@ -93,28 +95,28 @@ class ProcessorGraphs:
     def plot_activity_graph(self, processor_obj):
         self.sub_plot_activity.clear()
         activity_factor = 2.5
-        activity_list = [data*activity_factor for data in processor_obj.activity]
+        activity_list = [data*activity_factor for data in processor_obj.data["activity"]]
         self.sub_plot_activity.plot(Processor.time_period_list, activity_list, color='#00adce', linewidth=1)
         self.set_activity_graph()
 
     def plot_utilization(self, processor_obj):
         self.sub_plot_utilization.clear()
         utilization_factor = 2.5
-        utilization_list = [data*utilization_factor for data in processor_obj.utilization]
+        utilization_list = [data*utilization_factor for data in processor_obj.data["utilization"]]
         self.sub_plot_utilization.plot(Processor.time_period_list, utilization_list, color='#00adce', linewidth=1)
         self.set_utilization_graph()
 
     def plot_stalled_state(self, processor_obj):
         self.sub_plot_stalled_state.clear()
         stalled_state_factor = 2.5
-        stalled_state_list = [data*stalled_state_factor for data in processor_obj.stalled_state]
+        stalled_state_list = [data*stalled_state_factor for data in processor_obj.data["stalled"]]
         self.sub_plot_stalled_state.step(Processor.time_period_list, stalled_state_list, color='#00adce', linewidth=0.8)
         self.set_stalled_state_graph()
 
     def plot_power_mW(self, processor_obj):
         self.sub_plot_power_mW.clear()
         power_mW_factor = 0.1
-        power_mW_list = [data*power_mW_factor for data in processor_obj.power_mW]
+        power_mW_list = [data*power_mW_factor for data in processor_obj.data["power_mW"]]
         self.sub_plot_power_mW.stackplot(Processor.time_period_list, power_mW_list, color='#00adce')
         self.set_power_mW_graph()
 

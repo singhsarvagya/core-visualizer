@@ -25,6 +25,7 @@ class TerminalGUI:
         This function is used to pack the Terminal into the GUI.
         It also clear the text widget for the new project.
     '''
+    # TODO work on packing of the terminal GUI 
     def pack(self):
         TerminalGUI.text.config(state=NORMAL)
         TerminalGUI.text.delete('1.0', END)

@@ -1,4 +1,5 @@
 from processor_obj_file import Processor
+# TODO get this data from the setting 
 total_processors = 100
 # data_recoder_out_file = "sample_data/data_recorder_out.txt"
 # processor_coordinate_file = "settings/processor_coordinate.csv"
@@ -23,7 +24,7 @@ def read_data_recoder_out(processor_obj_list,
     for i in range(1, len(lines)):
         data = lines[i].rstrip().split(' ')
         time = data[1]
-        Processor.initialize_time_period_index_dic(time)
+        Processor.initialize_time_period_list(time)
         Processor.register_processor_data(processor_obj_list, data)
 
 
