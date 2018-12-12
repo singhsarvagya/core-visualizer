@@ -18,7 +18,7 @@ class GUI:
         self.root = root
 
         # intializing the title of the window 
-        if title and len(title) > 0: 
+        if title != None and len(title) > 0: 
             self.root.title(title)
         else:
             self.root.title("Core Visualizer")

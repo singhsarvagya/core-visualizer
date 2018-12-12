@@ -25,9 +25,11 @@ class ProcessorMap:
         self.canvas.show()
 
     # TODO remove the rdf dependency 
-    def draw(self, processor_obj_list):
+    def draw(self, processor_obj_list, processor_coordinate_file_loc):
         plt.figure(PM_FIGURE_ID)
-        patch_list = rdf.plot_processor(processor_obj_list, self.ax)
+        patch_list = rdf.plot_processor(processor_obj_list,
+            processor_coordinate_file_loc, 
+            self.ax)
         p = PatchCollection(patch_list, facecolor='none')
         self.ax.add_collection(p)
 
