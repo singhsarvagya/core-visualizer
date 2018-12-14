@@ -6,6 +6,8 @@ import subprocess
 from tkinter import messagebox, filedialog
 import os
 
+# TODO fix the packing of the terminal 
+
 class GUI:
     def __init__(self,
         root,

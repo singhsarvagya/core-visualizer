@@ -27,7 +27,6 @@ class ProcessorMap:
         self.canvas = FigureCanvasTkAgg(self.fig, master=root)
         self.canvas.show()
 
-    # TODO remove the rdf dependency 
     def draw(self, processor_obj_list, processor_coordinate_file_loc):
         plt.figure(PM_FIGURE_ID)
 
@@ -103,5 +102,4 @@ class ProcessorGraphs:
                 # TODO add a terminal message that prints the current state of the processor 
             self.canvas.draw()
         else:
-            # TODO change this to a dialog box or terminal message 
             messagebox.askokcancel("Error", "Clicked processor object not found.") 
