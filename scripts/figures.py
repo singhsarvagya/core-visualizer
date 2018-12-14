@@ -1,13 +1,16 @@
 from tkinter import *
+from tkinter import messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.collections import PatchCollection
 import read_data_file as rdf
 from processor_obj_file import Processor
-
+from terminal_gui import TerminalGUI
 
 PM_FIGURE_ID = 1
 SPM_FIGURE_ID = 2
+
+# TODO update the subplot to a marker when user timesteps into it 
 
 class ProcessorMap:
     def __init__(self, root):
@@ -17,7 +20,6 @@ class ProcessorMap:
         self.ax = self.fig.add_subplot(111, aspect='equal')
         self.fig.patch.set_visible(False)
 
-        # TODO make this intilization using settings file 
         self.ax.axis([-500, 10500, -500, 10500])
         self.ax.set_xticks([])
         self.ax.set_yticks([])
@@ -47,31 +49,37 @@ class ProcessorGraphs:
         # settings the subplots 
         self.graph_settings = settings
         self.subplots = []
-        self.set_subplots()
+        self.create_subplots()
+
+        self.current_processor = None 
 
         self.fig.patch.set_visible(False)
         self.fig.tight_layout(pad=0.2)
         self.canvas = FigureCanvasTkAgg(self.fig, master=root)
         self.canvas.show()
 
-    def set_subplots(self):
+    def create_subplots(self):
         subplot_id = 511
         for i in range(0, len(self.graph_settings)):
             self.subplots.append(self.fig.add_subplot(subplot_id, aspect=0.225))
             subplot_id += 1
 
+    def set_subplots(self, index):
+        self.subplots[index].set_xbound(-0.1, 2.75)
+        self.subplots[index].set_ybound(-0.1, 2.7)
+        self.subplots[index].set_yticks([])
+        self.subplots[index].set_xticks([])
+        self.subplots[index].set_xlabel(self.graph_settings[index]["x_label"])
+        self.subplots[index].set_ylabel(self.graph_settings[index]["y_label"])
+
     def pack(self):
         for i in range(0, len(self.graph_settings)): 
-            self.subplots[i].set_xbound(-0.1, 2.75)
-            self.subplots[i].set_ybound(-0.1, 2.7)
-            self.subplots[i].set_yticks([])
-            self.subplots[i].set_xticks([])
-            self.subplots[i].set_xlabel(self.graph_settings[i]["x_label"])
-            self.subplots[i].set_ylabel(self.graph_settings[i]["y_label"])
+            self.set_subplots(i)
         self.canvas.get_tk_widget().pack(side=RIGHT, fill=BOTH, expand=1)
 
     def update(self, proc_name, processor_obj_list):
         processor_obj = Processor.get_processor_obj(proc_name, processor_obj_list)
+        self.current_processor = proc_name
         if processor_obj:
             for i in range(0, len(self.graph_settings)):
                 self.subplots[i].clear()
@@ -81,14 +89,9 @@ class ProcessorGraphs:
                         data,
                         color="#00adce",
                         linewidth=0.5)
-                self.subplots[i].set_xbound(-0.1, 2.75)
-                self.subplots[i].set_ybound(-0.1, 2.7)
-                self.subplots[i].set_yticks([])
-                self.subplots[i].set_xticks([])
-                self.subplots[i].set_xlabel(self.graph_settings[i]["x_label"])
-                self.subplots[i].set_ylabel(self.graph_settings[i]["y_label"])
+                self.set_subplots(i)
                 # TODO add a terminal message that prints the current state of the processor 
             self.canvas.draw()
         else:
             # TODO change this to a dialog box or terminal message 
-            print("Clicked processor object not found")
+            messagebox.askokcancel("Error", "Clicked processor object not found.") 

@@ -1,5 +1,4 @@
 # tkinter GUI libraries
-# TODO add logo to the icon 
 # add verticle marker to the graphs 
 from tkinter import *
 from tkinter import messagebox
@@ -8,15 +7,16 @@ from tkinter import messagebox
 # settings.xml as an argument 
 import argparse
 
+import os
 # user defined libraries and functions 
 from gui import GUI
 from figures import ProcessorMap, ProcessorGraphs
-import read_data_file as rdf
-import matplotlib.pyplot as plt
+import read_data_file 
 from processor_obj_file import Processor
 from settings import Settings
-
 from terminal_gui import TerminalGUI
+
+import matplotlib.pyplot as plt
 plt.style.use('bmh')
 
 parser = argparse.ArgumentParser()
@@ -32,7 +32,6 @@ class CoreVisualizer:
 
         # terminal window for GUI
         self.root = Tk()
-
         # settings object
         self.settings = Settings(args.settings_file_loc)
 
@@ -51,7 +50,7 @@ class CoreVisualizer:
 
 
     def initialize_processor_obj_list(self):
-        rdf.read_data_recoder_out(
+        read_data_file.read_data_recoder_out(
             self.processor_obj_list, 
             self.settings.get_data_recorder_out_file_loc())
 

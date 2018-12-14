@@ -4,6 +4,7 @@ total_processors = 100
 # data_recoder_out_file = "sample_data/data_recorder_out.txt"
 # processor_coordinate_file = "settings/processor_coordinate.csv"
 
+# TODO move this function to core visullizer 
 def read_data_recoder_out(processor_obj_list,
                           data_recoder_out_file_loc):
     '''
@@ -27,7 +28,7 @@ def read_data_recoder_out(processor_obj_list,
         Processor.initialize_time_period_list(time)
         Processor.register_processor_data(processor_obj_list, data)
 
-
+# TODO move this file to figures 
 def plot_processor(processor_obj_list,
                     processor_coordinate_file_loc,
                     ax):
