@@ -11,7 +11,6 @@ import os
 # user defined libraries and functions 
 from gui import GUI
 from figures import ProcessorMap, ProcessorGraphs
-import read_data_file 
 from processor_obj_file import Processor
 from settings import Settings
 from terminal_gui import TerminalGUI
@@ -22,6 +21,9 @@ plt.style.use('bmh')
 parser = argparse.ArgumentParser()
 parser.add_argument('settings_file_loc')
 args = parser.parse_args()
+
+# TODO get this data from the setting 
+total_processors = 100
 
 class CoreVisualizer:
 
@@ -49,9 +51,19 @@ class CoreVisualizer:
 
 
     def initialize_processor_obj_list(self):
-        read_data_file.read_data_recoder_out(
-            self.processor_obj_list, 
-            self.settings.get_data_recorder_out_file_loc())
+        lines = tuple(open(self.settings.get_data_recorder_out_file_loc(), 'r'))
+
+        # initializing the processor objects
+        x = lines[0].rstrip().split(' ')
+        Processor.initialize_processor_index_dic(x)
+        for i in range(2, 2+total_processors):
+            self.processor_obj_list.insert(i-2, Processor(x[i]))
+
+        for i in range(1, len(lines)):
+            data = lines[i].rstrip().split(' ')
+            time = data[1]
+            Processor.initialize_time_period_list(time)
+            Processor.register_processor_data(self.processor_obj_list, data)
 
 
     def get_processor_name(self, x, y): 

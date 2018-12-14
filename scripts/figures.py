@@ -31,9 +31,20 @@ class ProcessorMap:
     # TODO remove the rdf dependency 
     def draw(self, processor_obj_list, processor_coordinate_file_loc):
         plt.figure(PM_FIGURE_ID)
-        patch_list = rdf.plot_processor(processor_obj_list,
-            processor_coordinate_file_loc, 
-            self.ax)
+
+        lines = tuple(open(processor_coordinate_file_loc, 'r'))
+        patch_list = []
+
+        # reading processor objects, and x and y coordinates 
+        # for the lower left corner of the processor figure 
+        for line in lines:
+            data = line.rstrip().split(',')
+            # initializing the processor object list based on their name  
+            processor = processor_obj_list[Processor.processor_index_dic[data[0]]]
+            patch_list += processor.map_processor_graph_object(data[2],
+                data[1],
+                self.ax)
+
         p = PatchCollection(patch_list, facecolor='none')
         self.ax.add_collection(p)
 
