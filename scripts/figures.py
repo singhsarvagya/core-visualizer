@@ -3,7 +3,6 @@ from tkinter import messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.collections import PatchCollection
-import read_data_file as rdf
 from processor_obj_file import Processor
 from terminal_gui import TerminalGUI
 
