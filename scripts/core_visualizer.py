@@ -41,7 +41,6 @@ class CoreVisualizer:
         self.processor_graphs = ProcessorGraphs(self.root,
                                                 self.settings.get_graphs())
 
-        # TODO get title from the setting files 
         self.gui = GUI(self.root,
                         self.processor_map,
                         self.processor_graphs,
@@ -57,16 +56,15 @@ class CoreVisualizer:
 
     def get_processor_name(self, x, y): 
         for processor in self.processor_obj_list:
-            # TODO make into one function 
-            proc_x = processor.get_processor_graph_obj_x()
-            proc_y = processor.get_processor_graph_obj_y()
-            # TODO remove dependency on the 100 
-            if proc_x == x-100 and proc_y == y-100: 
+            proc_x, proc_y = processor.get_processor_graph_obj_coordinates()
+            if proc_x == x and proc_y == y: 
                 return processor.name
         return None 
 
-    def update_graphs(self, processor_name):
-        self.processor_graphs.update(processor_name, self.processor_obj_list)
+    def update_graphs(self, x, y):
+        processor_name = self.get_processor_name(x, y)
+        self.processor_graphs.update(processor_name,
+            self.processor_obj_list)
 
     def draw_processors(self):
         self.processor_map.draw(self.processor_obj_list,
@@ -90,11 +88,7 @@ if __name__ == '__main__':
         patch = event.artist
         if event.mouseevent.inaxes and event.mouseevent.button == 1\
                 and not event.mouseevent.dblclick:
-            # TODO make into one function 
-            proc_name = core_visualizer.get_processor_name(patch.xy[0], patch.xy[1])
-            core_visualizer.update_graphs(proc_name)
-            # graph.fig.canvas.draw()
-            pass
+            core_visualizer.update_graphs(patch.xy[0], patch.xy[1])
 
     core_visualizer.processor_map.fig.canvas.callbacks.connect('pick_event', on_pick)
 

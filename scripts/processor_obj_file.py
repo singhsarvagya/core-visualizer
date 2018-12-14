@@ -161,15 +161,11 @@ class Processor:
         if Processor.buffer_num_write_patch_collection:
             Processor.buffer_num_write_patch_collection.remove()
 
-    def get_processor_graph_obj_x(self):
+    def get_processor_graph_obj_coordinates(self):
         if self.processor_graph_obj == None:
             return -1 
-        return self.processor_graph_obj.x_coordinate
-
-    def get_processor_graph_obj_y(self):
-        if self.processor_graph_obj == None:
-            return -1 
-        return self.processor_graph_obj.y_coordinate
+        return self.processor_graph_obj.x_coordinate, \
+            self.processor_graph_obj.y_coordinate
 
 # TODO define global constants for graph object
 # dimensions 
@@ -178,8 +174,8 @@ class ProcessorGraph:
 
     def __init__(self, x_coordinate, y_coordinate, name):
         self.name = name
-        self.x_coordinate = int(x_coordinate)
-        self.y_coordinate = int(y_coordinate)
+        self.x_coordinate = int(x_coordinate)+100
+        self.y_coordinate = int(y_coordinate)+100
         '''
             patches_list:
                 0: buffer num write 0
@@ -194,18 +190,18 @@ class ProcessorGraph:
     def map(self, ax):
         # TODO make the dimensions here independent 
         # in all rectangle and circle
-        outer_rec = Rectangle(xy=(self.x_coordinate + 100, self.y_coordinate + 100), width=800,
+        outer_rec = Rectangle(xy=(self.x_coordinate, self.y_coordinate), width=800,
                               height=800,  picker=True, facecolor='none',
                               edgecolor='#d3d3d3', linewidth=2)
         ax.add_artist(outer_rec)
-        self.patches_list += [Rectangle((self.x_coordinate+100, self.y_coordinate+100), 200, 0),
-                              Rectangle((self.x_coordinate+300, self.y_coordinate+100), 200, 0),
-                              Rectangle((self.x_coordinate+500, self.y_coordinate+100), 200, 0),
-                              Rectangle((self.x_coordinate+700, self.y_coordinate+100), 200, 0),
-                              Circle(xy=(int(self.x_coordinate)+800, int(self.y_coordinate)+800), radius=75)]
+        self.patches_list += [Rectangle((self.x_coordinate, self.y_coordinate), 200, 0),
+                              Rectangle((self.x_coordinate+200, self.y_coordinate), 200, 0),
+                              Rectangle((self.x_coordinate+400, self.y_coordinate), 200, 0),
+                              Rectangle((self.x_coordinate+600, self.y_coordinate), 200, 0),
+                              Circle(xy=(int(self.x_coordinate)+700, int(self.y_coordinate)+700), radius=75)]
 
         self.processor_label = plt.annotate(self.name,
-                                            xy=(self.x_coordinate+500, self.y_coordinate-25),
+                                            xy=(self.x_coordinate+400, self.y_coordinate-125),
                                             horizontalalignment='center', verticalalignment='center',
                                             fontsize='7', weight='bold')
         return self.patches_list
@@ -251,12 +247,3 @@ class ProcessorGraph:
 
             list2 += [num_read_0_graph_obj, num_read_1_graph_obj]
         return list1, list2
-
-    # TODO see where this function is called 
-    @staticmethod
-    def clean_patches(processor_obj_list):
-        list = []
-        for processor in processor_obj_list:
-            graph_obj = processor.processor_graph_obj
-            list += graph_obj.patches_list
-        return list
