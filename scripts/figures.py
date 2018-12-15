@@ -50,7 +50,7 @@ class ProcessorMap:
     def pack(self):
         self.canvas.get_tk_widget().pack(side=LEFT, fill=BOTH, expand=1)
 
-
+# TODO X range 
 class ProcessorGraphs:
     def __init__(self, root, settings):
         self.fig = plt.figure(SPM_FIGURE_ID)
@@ -91,17 +91,22 @@ class ProcessorGraphs:
         time = Processor.get_time(Processor.current_time_index)
         data = processor.get_data_dictionary(time)
         msg = "Processor State: \n"
-        msg += "Name: " + processor.name +"\n"
+        msg += "Name: " + processor.name + "\n"
+        msg += "Time: " + time + "\n"
         keys = sorted(list(data.keys()))
-        print (keys)
         for key in keys: 
             msg += (key + ": " + str(data[key]) + "\n")
 
         TerminalGUI.print_func(msg)
 
     def update(self, proc_name, processor_obj_list):
+        if proc_name == None: 
+            proc_name = self.current_processor 
+
         processor_obj = Processor.get_processor_obj(proc_name, processor_obj_list)
         self.current_processor = proc_name
+        time = int(Processor.get_time(Processor.current_time_index))/10000000
+
         if processor_obj:
             for i in range(0, len(self.graph_settings)):
                 self.subplots[i].clear()
@@ -111,8 +116,9 @@ class ProcessorGraphs:
                         data,
                         color="#00adce",
                         linewidth=0.5)
+                self.subplots[i].plot((time, time), (0, 2.70),
+                        color="#FF0000",
+                        linewidth=0.75)
                 self.set_subplots(i)
                 self.print_processor_state(processor_obj)
             self.canvas.draw()
-        else:
-            messagebox.askokcancel("Error", "Clicked processor object not found.") 

@@ -31,7 +31,7 @@ class GUI:
         # initializing the other GUI objest 
         self.terminal_gui_obj = TerminalGUI(self.root)
         self.menu_gui = MenuGUI(self.root, processor_map.fig)
-        self.toolbar = ToolBar(root, processor_map.ax, processor_map.fig, processor_obj_list)
+        self.toolbar = ToolBar(root, processor_map.ax, processor_map.fig, processor_obj_list, processor_graphs)
 
     # packing all the gui objects 
     def pack(self):
@@ -96,7 +96,7 @@ class MenuGUI:
 '''
 class ToolBar:
 
-    def __init__(self, root, ax, figure, processor_obj_list):
+    def __init__(self, root, ax, figure, processor_obj_list, processor_graphs):
         self.root = root
         self.toolbar = Frame(root)
         self.figure = figure
@@ -120,6 +120,7 @@ class ToolBar:
 
         # processor object list 
         self.processor_obj_list = processor_obj_list
+        self.processor_graphs = processor_graphs
         self.step_size = 20
 
     def pack(self):
@@ -131,6 +132,7 @@ class ToolBar:
     def update_next(self):
         Processor.update_processor_map(self.processor_obj_list, self.ax, self.step_size)
         self.figure.canvas.draw()
+        self.processor_graphs.update(None, self.processor_obj_list)
 
     '''
         Jumps to previous step. Size of the step can be adjusted
@@ -138,6 +140,7 @@ class ToolBar:
     def update_prev(self):
         Processor.update_processor_map(self.processor_obj_list, self.ax, -self.step_size)
         self.figure.canvas.draw()
+        self.processor_graphs.update(None, self.processor_obj_list)
 
     '''
         Function changes the steps size of the next or prev steps 
