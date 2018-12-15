@@ -118,9 +118,16 @@ class ToolBar:
                                                 command=self.change_step_size)
         self.change_step_size_button.pack(side=LEFT, padx=2, pady=2)
 
+        # button for change garph range 
+        self.time_range_button = Button(self.toolbar,
+                                            text="Time Range", 
+                                            command=self.change_time_range)
+        self.time_range_button.pack(side=LEFT, padx=2, pady=2)
+
         # processor object list 
         self.processor_obj_list = processor_obj_list
         self.processor_graphs = processor_graphs
+        # TODO set intial step size 
         self.step_size = 20
 
     def pack(self):
@@ -148,3 +155,24 @@ class ToolBar:
     def change_step_size(self):
         self.step_size = simpledialog.askinteger("Step Size", "Enter Step Size (integer):")
         TerminalGUI.print_func("Step size changed to: "+ str(self.step_size))
+
+    def change_time_range(self): 
+        time_min = 0.0
+        time_max = 2.0
+        time_min = simpledialog.askfloat("Graph Time Range", "Enter lower limit for the time range:")
+        time_max = simpledialog.askfloat("Graph Time Range", "Enter higher limit for the time range:")
+
+        # check if min is less than max 
+        if time_min > time_max: 
+            messagebox.askokcancel("Error", "Lower time limit must be less than the max time limit.") 
+            return 
+        elif time_min < min(Processor.time_period_list): 
+            # check if min is greater than equal to lower limit 
+            messagebox.askokcancel("Error", "Higher time limit must be greater than or equal to min time: "+str(min(Processor.time_period_list))) 
+            return 
+        elif time_max > max(Processor.time_period_list): 
+            # check if max is less than or equal to higher lmit 
+            messagebox.askokcancel("Error", "Higher time limit must be less than or equal to min time: "+str(max(Processor.time_period_list))) 
+            return
+        # setting up the time range 
+        self.processor_graphs.set_graph_time_range(time_min, time_max)

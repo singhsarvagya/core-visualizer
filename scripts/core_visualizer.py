@@ -65,6 +65,9 @@ class CoreVisualizer:
             Processor.initialize_time_period_list(time)
             Processor.register_processor_data(self.processor_obj_list, data)
 
+    def setup_graph_time_range(self): 
+        self.processor_graphs.set_graph_time_range(
+            min(Processor.time_period_list), max(Processor.time_period_list))
 
     def get_processor_name(self, x, y): 
         for processor in self.processor_obj_list:
@@ -92,6 +95,8 @@ if __name__ == '__main__':
 
     # reading the data recorder out to read the processors data 
     core_visualizer.initialize_processor_obj_list()
+    # setting processor graph range 
+    core_visualizer.setup_graph_time_range()
     # packing the GUI
     core_visualizer.pack_gui()
     # drawing the figure for the processor objects 
