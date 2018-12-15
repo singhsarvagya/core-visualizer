@@ -104,10 +104,11 @@ if __name__ == '__main__':
 
     core_visualizer.processor_map.fig.canvas.callbacks.connect('pick_event', on_pick)
 
+    # TODO remove the comments when done developing 
     def on_closing():
-        if messagebox.askokcancel("Quit", "Do you want to exit the application?"):
-            core_visualizer.root.destroy()
-            sys.exit(0)
+        #if messagebox.askokcancel("Quit", "Do you want to exit the application?"):
+        #    core_visualizer.root.destroy()
+        sys.exit(0)
     core_visualizer.root.protocol("WM_DELETE_WINDOW", on_closing)
 
     core_visualizer.root.mainloop()

@@ -136,14 +136,14 @@ class Processor:
             Processor.clean_graph()
             # updating stalled state patched to their respective colors
             stalled_state_patch_list1, stalled_state_patch_list2 = \
-                ProcessorGraph.update_stalled_state_patches(processor_obj_list, time)
+                Processor.update_all_stalled_state_patches(processor_obj_list, time)
             Processor.stalled_state_patch_collection_1 = PatchCollection(stalled_state_patch_list1, facecolors='red', edgecolors='red')
             ax.add_collection(Processor.stalled_state_patch_collection_1)
             Processor.stalled_state_patch_collection_2 = PatchCollection(stalled_state_patch_list2, facecolors='green', edgecolors='green')
             ax.add_collection(Processor.stalled_state_patch_collection_2)
             # updating buffer patches
             buffer_num_write_patch_list, buffer_num_read_patch_list = \
-                ProcessorGraph.update_buffer_patches(processor_obj_list, time)
+                Processor.update_all_buffer_patches(processor_obj_list, time)
             Processor.buffer_num_read_patch_collection = PatchCollection(buffer_num_read_patch_list, facecolors='#0099CC', edgecolors='#0099CC')
             ax.add_collection(Processor.buffer_num_read_patch_collection)
             Processor.buffer_num_write_patch_collection = PatchCollection(buffer_num_write_patch_list, facecolors='#66CCFF', edgecolors='#66CCFF')
@@ -166,6 +166,52 @@ class Processor:
             return -1 
         return self.processor_graph_obj.x_coordinate, \
             self.processor_graph_obj.y_coordinate
+
+    def update_buffer_patches(self, time):
+        num_write_0 = self.access_processor_data(time, 'input_buffers[0].num_writes')
+        num_write_1 = self.access_processor_data(time, 'input_buffers[1].num_writes')
+        num_read_0 = self.access_processor_data(time, 'input_buffers[0].num_reads')
+        num_read_1 = self.access_processor_data(time, 'input_buffers[1].num_reads')
+
+        return self.processor_graph_obj.update_buffer_patches(num_write_0, num_write_1, num_read_0, num_read_1)
+
+    def update_stalled_state_patches(self, time): 
+        stalled_state = self.access_processor_data(time, "stalled")
+        stalled_state_patch = self.processor_graph_obj.get_stalled_state_patch()
+        return stalled_state_patch, stalled_state
+
+    @staticmethod
+    def update_all_buffer_patches(processor_object_list, time):
+        list1 = []
+        list2 = []
+
+        for processor in processor_object_list:
+            num_write_0_graph_obj, num_write_1_graph_obj, num_read_0_graph_obj, num_read_1_graph_obj \
+                = processor.update_buffer_patches(time)
+            list1 += [num_write_0_graph_obj, num_write_1_graph_obj]
+            list2 += [num_read_0_graph_obj, num_read_1_graph_obj]
+        
+        return list1, list2
+
+    @staticmethod
+    def update_all_stalled_state_patches(processor_obj_list, time):
+        list1 = []
+        list2 = []
+        for processor in processor_obj_list:
+            stalled_state_patch, stalled_state = processor.update_stalled_state_patches(time)
+            if stalled_state == 1:
+                list1 += [stalled_state_patch]
+            else:
+                list2 += [stalled_state_patch]
+        return list1, list2
+
+    def get_data_dictionary(self,time): 
+        data_dic = {}
+        for key in self.data.keys(): 
+            data_dic[key] = self.access_processor_data(time, key)
+
+        return data_dic
+
 
 # TODO define global constants for graph object
 # dimensions 
@@ -206,44 +252,23 @@ class ProcessorGraph:
                                             fontsize='7', weight='bold')
         return self.patches_list
 
-    @staticmethod
-    def update_stalled_state_patches(processor_obj_list, time):
-        list1 = []
-        list2 = []
-        for processor in processor_obj_list:
-            stalled_state_patch = processor.processor_graph_obj.patches_list[4]
-            # time_index = Processor.time_period_index_dic[time]
-            if processor.access_processor_data(time, "stalled") == 1:
-                list1 += [stalled_state_patch]
-            else:
-                list2 += [stalled_state_patch]
-        return list1, list2
-
-    @staticmethod
-    def update_buffer_patches(processor_object_list, time):
-        list1 = []
-        list2 = []
-
+    def update_buffer_patches(self, 
+        num_write_0, num_write_1, num_read_0, num_read_1):
         # TODO remove 700 here 
-        for processor in processor_object_list:
 
-            num_write_0 = processor.access_processor_data(time, 'input_buffers[0].num_writes')
-            processor.processor_graph_obj.patches_list[0].set_height(float(num_write_0)*700/ProcessorGraph.max_buffer_value)
-            num_write_0_graph_obj  = processor.processor_graph_obj.patches_list[0]
+        self.patches_list[0].set_height(float(num_write_0)*700/ProcessorGraph.max_buffer_value)
+        num_write_0_graph_obj  = self.patches_list[0]
 
-            num_write_1 = processor.access_processor_data(time, 'input_buffers[1].num_writes')
-            processor.processor_graph_obj.patches_list[2].set_height(float(num_write_1)*700/ProcessorGraph.max_buffer_value)
-            num_write_1_graph_obj = processor.processor_graph_obj.patches_list[2]
+        self.patches_list[2].set_height(float(num_write_1)*700/ProcessorGraph.max_buffer_value)
+        num_write_1_graph_obj = self.patches_list[2]
 
-            list1 += [num_write_0_graph_obj, num_write_1_graph_obj]
+        self.patches_list[1].set_height(float(num_read_0)*700/ProcessorGraph.max_buffer_value)
+        num_read_0_graph_obj = self.patches_list[1]
 
-            num_read_0 = processor.access_processor_data(time, 'input_buffers[0].num_reads')
-            processor.processor_graph_obj.patches_list[1].set_height(float(num_read_0)*700/ProcessorGraph.max_buffer_value)
-            num_read_0_graph_obj = processor.processor_graph_obj.patches_list[1]
+        self.patches_list[3].set_height(float(num_read_1)*700/ProcessorGraph.max_buffer_value)
+        num_read_1_graph_obj = self.patches_list[3]
 
-            num_read_1 = processor.access_processor_data(time, 'input_buffers[1].num_reads')
-            processor.processor_graph_obj.patches_list[3].set_height(float(num_read_1)*700/ProcessorGraph.max_buffer_value)
-            num_read_1_graph_obj = processor.processor_graph_obj.patches_list[3]
+        return [num_write_0_graph_obj, num_write_1_graph_obj, num_read_0_graph_obj, num_read_1_graph_obj] 
 
-            list2 += [num_read_0_graph_obj, num_read_1_graph_obj]
-        return list1, list2
+    def get_stalled_state_patch(self): 
+        return self.patches_list[4]

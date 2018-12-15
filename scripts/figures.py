@@ -86,6 +86,19 @@ class ProcessorGraphs:
             self.set_subplots(i)
         self.canvas.get_tk_widget().pack(side=RIGHT, fill=BOTH, expand=1)
 
+    def print_processor_state(self, processor): 
+        # printing the clicjed processor details on the terminal 
+        time = Processor.get_time(Processor.current_time_index)
+        data = processor.get_data_dictionary(time)
+        msg = "Processor State: \n"
+        msg += "Name: " + processor.name +"\n"
+        keys = sorted(list(data.keys()))
+        print (keys)
+        for key in keys: 
+            msg += (key + ": " + str(data[key]) + "\n")
+
+        TerminalGUI.print_func(msg)
+
     def update(self, proc_name, processor_obj_list):
         processor_obj = Processor.get_processor_obj(proc_name, processor_obj_list)
         self.current_processor = proc_name
@@ -99,7 +112,7 @@ class ProcessorGraphs:
                         color="#00adce",
                         linewidth=0.5)
                 self.set_subplots(i)
-                # TODO add a terminal message that prints the current state of the processor 
+                self.print_processor_state(processor_obj)
             self.canvas.draw()
         else:
             messagebox.askokcancel("Error", "Clicked processor object not found.") 

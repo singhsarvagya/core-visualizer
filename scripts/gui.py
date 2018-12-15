@@ -6,7 +6,6 @@ import subprocess
 from tkinter import messagebox, filedialog
 import os
 
-# TODO fix the packing of the terminal 
 
 class GUI:
     def __init__(self,
@@ -39,6 +38,7 @@ class GUI:
         self.toolbar.pack()
         self.processor_map.pack()
         self.processor_graphs.pack()
+        # TODO pack the terminal in the right place 
         self.terminal_gui_obj.pack()
 
 '''
