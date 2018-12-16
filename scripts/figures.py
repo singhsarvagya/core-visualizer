@@ -73,9 +73,11 @@ class ProcessorGraphs:
         self.y_max_bound = 2.7
         self.x_max_bound = 2.5
 
+    # gets the min and max time for the graph 
     def set_graph_time_range(self, time_min, time_max): 
         self.time_min = time_min
         self.time_max = time_max
+        Processor.set_time(self.time_min)
 
     def create_subplots(self):
         subplot_id = 511
@@ -84,7 +86,7 @@ class ProcessorGraphs:
             subplot_id += 1
 
     def set_subplots(self, index):
-        self.subplots[index].set_xbound(-0.1, self.x_max_bound)
+        self.subplots[index].set_xbound(0.0, self.x_max_bound)
         self.subplots[index].set_ybound(-0.1, self.y_max_bound)
         self.subplots[index].set_yticks([])
         self.subplots[index].set_xticks([])
@@ -97,7 +99,7 @@ class ProcessorGraphs:
         self.canvas.get_tk_widget().pack(side=RIGHT, fill=BOTH, expand=1)
 
     def print_processor_state(self, processor): 
-        # printing the clicjed processor details on the terminal 
+        # printing the clicked processor details on the terminal 
         time = Processor.get_time(Processor.current_time_index)
         data = processor.get_data_dictionary(time)
         msg = "Processor State: \n"
@@ -128,7 +130,7 @@ class ProcessorGraphs:
         processor_obj = Processor.get_processor_obj(proc_name, processor_obj_list)
         self.current_processor = proc_name
         # getting the cuurent processor map time 
-        time = int(Processor.get_time(Processor.current_time_index))/10000000
+        time = float(Processor.get_time(Processor.current_time_index))
 
         if processor_obj:
             for i in range(0, len(self.graph_settings)):

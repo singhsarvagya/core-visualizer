@@ -36,9 +36,7 @@ class Processor:
     def initialize_time_period_list(time):
         # also initialize time period list
         if time not in Processor.time_period_index_dic:
-            # convert the time to sec 
-            # assumes time in pico second 
-            Processor.time_period_list.append(int(time)/10000000)
+            Processor.time_period_list.append(int(time))
             Processor.time_period_index_dic[time] = Processor.time_index
             Processor.time_index += 1
         Processor.time_period_list.sort()
@@ -102,11 +100,15 @@ class Processor:
         function return the timestamp for a given timestamp index 
     '''
     @staticmethod
-    def get_time(time_state):
+    def get_time(time_index):
         for element in Processor.time_period_index_dic:
-            if Processor.time_period_index_dic[element] == time_state:
+            if Processor.time_period_index_dic[element] == time_index:
                 return element
         return None
+
+    @staticmethod
+    def set_time(time): 
+        Processor.time_index = time
 
     '''
         the function return the processor object for 
@@ -122,7 +124,7 @@ class Processor:
 
     @staticmethod
     def update_processor_map(processor_obj_list, ax, update_tag):
-        new_time_state = Processor.current_time_index + update_tag
+        new_time_state = update_tag
         if new_time_state < 0:
             TerminalGUI.print_func("Processor map already at minimum time period.")
         elif new_time_state >= len(Processor.time_period_index_dic):
@@ -205,6 +207,9 @@ class Processor:
                 list2 += [stalled_state_patch]
         return list1, list2
 
+    '''
+        Function returns the data for a processor state at a given time
+    '''
     def get_data_dictionary(self,time): 
         data_dic = {}
         for key in self.data.keys(): 
@@ -213,11 +218,9 @@ class Processor:
         return data_dic
 
 
-# TODO define global constants for graph object
-# dimensions 
 class ProcessorGraph:
-    max_buffer_value = 14500.0
 
+    # TODO add settings 
     def __init__(self, x_coordinate, y_coordinate, name):
         self.name = name
         self.x_coordinate = int(x_coordinate)+100
@@ -233,42 +236,62 @@ class ProcessorGraph:
         self.patches_list = []
         self.processor_label = None
 
+        self.max_buffer_value = 14500.0
+        self.dimension = 800
+        self.radius = 75 
+
+    # This function create patches and annotations 
+    # for the a processor given processor coordinates 
     def map(self, ax):
-        # TODO make the dimensions here independent 
-        # in all rectangle and circle
-        outer_rec = Rectangle(xy=(self.x_coordinate, self.y_coordinate), width=800,
-                              height=800,  picker=True, facecolor='none',
-                              edgecolor='#d3d3d3', linewidth=2)
+        outer_rec = Rectangle(xy=(self.x_coordinate, self.y_coordinate),
+            width=self.dimension,
+            height=self.dimension,
+            picker=True,
+            facecolor='none',
+            edgecolor='#d3d3d3',
+            linewidth=2)
         ax.add_artist(outer_rec)
-        self.patches_list += [Rectangle((self.x_coordinate, self.y_coordinate), 200, 0),
-                              Rectangle((self.x_coordinate+200, self.y_coordinate), 200, 0),
-                              Rectangle((self.x_coordinate+400, self.y_coordinate), 200, 0),
-                              Rectangle((self.x_coordinate+600, self.y_coordinate), 200, 0),
-                              Circle(xy=(int(self.x_coordinate)+700, int(self.y_coordinate)+700), radius=75)]
+        self.patches_list += [Rectangle((self.x_coordinate, self.y_coordinate),
+                                self.dimension/4, 0),
+                              Rectangle((self.x_coordinate+(self.dimension/4),
+                                self.y_coordinate),
+                                self.dimension/4, 0),
+                              Rectangle((self.x_coordinate+(2*self.dimension/4),
+                                self.y_coordinate),
+                                self.dimension/4, 0),
+                              Rectangle((self.x_coordinate+(3*self.dimension/4),
+                                self.y_coordinate),
+                                self.dimension/4, 0),
+                              Circle(xy=(int(self.x_coordinate)+(7*self.dimension/8),
+                                int(self.y_coordinate)+(7*self.dimension/8)), radius=self.radius)]
 
         self.processor_label = plt.annotate(self.name,
-                                            xy=(self.x_coordinate+400, self.y_coordinate-125),
-                                            horizontalalignment='center', verticalalignment='center',
-                                            fontsize='7', weight='bold')
+                                xy=(self.x_coordinate+self.dimension/2, self.y_coordinate-150),
+                                horizontalalignment='center',
+                                verticalalignment='center',
+                                fontsize='7', weight='bold')
         return self.patches_list
 
-    def update_buffer_patches(self, 
-        num_write_0, num_write_1, num_read_0, num_read_1):
-        # TODO remove 700 here 
+    # function updates the size of the buffer patches on the map 
+    # for the given time 
+    def update_buffer_patches(self, num_write_0, num_write_1, num_read_0, num_read_1):
 
-        self.patches_list[0].set_height(float(num_write_0)*700/ProcessorGraph.max_buffer_value)
+        # only useds 80% of the self.dimention to represent buffer 
+        # looks pretty 
+        self.patches_list[0].set_height(0.8*self.dimension*float(num_write_0)/self.max_buffer_value)
         num_write_0_graph_obj  = self.patches_list[0]
 
-        self.patches_list[2].set_height(float(num_write_1)*700/ProcessorGraph.max_buffer_value)
+        self.patches_list[2].set_height(0.8*self.dimension*float(num_write_1)/self.max_buffer_value)
         num_write_1_graph_obj = self.patches_list[2]
 
-        self.patches_list[1].set_height(float(num_read_0)*700/ProcessorGraph.max_buffer_value)
+        self.patches_list[1].set_height(0.8*self.dimension*float(num_read_0)/self.max_buffer_value)
         num_read_0_graph_obj = self.patches_list[1]
 
-        self.patches_list[3].set_height(float(num_read_1)*700/ProcessorGraph.max_buffer_value)
+        self.patches_list[3].set_height(0.8*self.dimension*float(num_read_1)/self.max_buffer_value)
         num_read_1_graph_obj = self.patches_list[3]
 
         return [num_write_0_graph_obj, num_write_1_graph_obj, num_read_0_graph_obj, num_read_1_graph_obj] 
 
+    # function returns the stalled state patch 
     def get_stalled_state_patch(self): 
         return self.patches_list[4]

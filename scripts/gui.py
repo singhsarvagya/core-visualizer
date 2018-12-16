@@ -137,7 +137,7 @@ class ToolBar:
         Jumps to next step. Step size can be adjusted
     '''
     def update_next(self):
-        Processor.update_processor_map(self.processor_obj_list, self.ax, self.step_size)
+        Processor.update_processor_map(self.processor_obj_list, self.ax, Processor.current_time_index+self.step_size)
         self.figure.canvas.draw()
         self.processor_graphs.update(None, self.processor_obj_list)
 
@@ -145,7 +145,7 @@ class ToolBar:
         Jumps to previous step. Size of the step can be adjusted
     '''
     def update_prev(self):
-        Processor.update_processor_map(self.processor_obj_list, self.ax, -self.step_size)
+        Processor.update_processor_map(self.processor_obj_list, self.ax, Processor.current_time_index-self.step_size)
         self.figure.canvas.draw()
         self.processor_graphs.update(None, self.processor_obj_list)
 
@@ -153,8 +153,10 @@ class ToolBar:
         Function changes the steps size of the next or prev steps 
     '''
     def change_step_size(self):
-        self.step_size = simpledialog.askinteger("Step Size", "Enter Step Size (integer):")
-        TerminalGUI.print_func("Step size changed to: "+ str(self.step_size))
+        step_size = simpledialog.askinteger("Step Size", "Enter Step Size (integer):")
+        if step_size != None: 
+            self.step_size = step_size
+            TerminalGUI.print_func("Step size changed to: "+ str(self.step_size))
 
     def change_time_range(self): 
         time_min = 0.0
@@ -176,3 +178,17 @@ class ToolBar:
             return
         # setting up the time range 
         self.processor_graphs.set_graph_time_range(time_min, time_max)
+
+        #print (Processor.time_period_list)
+        min_time = Processor.time_period_list[-1] 
+        index = -1 
+
+        for i in range(0, len(Processor.time_period_list)):
+            if time_min < Processor.time_period_list[i] and \
+                min_time > Processor.time_period_list[i]: 
+                min_time = Processor.time_period_list[i] 
+                index = i 
+
+        if index != -1: 
+            Processor.update_processor_map(self.processor_obj_list, self.ax, index)
+            self.processor_graphs.update(None, self.processor_obj_list)
