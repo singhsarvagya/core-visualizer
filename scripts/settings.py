@@ -41,7 +41,7 @@ class Settings:
 				sys.exit(0)		
 			return atype.get('value')
 
-	def get_graphs(self):
+	def get_graph_settings(self):
 		# function returns the settings for the 
 		# processor graphs 
 		graph_settings = []

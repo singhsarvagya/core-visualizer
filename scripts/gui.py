@@ -179,7 +179,6 @@ class ToolBar:
         # setting up the time range 
         self.processor_graphs.set_graph_time_range(time_min, time_max)
 
-        #print (Processor.time_period_list)
         min_time = Processor.time_period_list[-1] 
         index = -1 
 

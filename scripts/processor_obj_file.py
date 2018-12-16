@@ -41,6 +41,17 @@ class Processor:
             Processor.time_index += 1
         Processor.time_period_list.sort()
 
+    @staticmethod
+    def get_num_of_processors(): 
+        return len(Processor.processor_index_dic.keys())
+
+    @ staticmethod
+    def get_processor_name(processor_obj_list, x, y):
+        for processor in processor_obj_list:
+            proc_x, proc_y = processor.get_processor_graph_obj_coordinates()
+            if proc_x == x and proc_y == y: 
+                return processor.name
+        return None 
 
     '''
         Function takes in time_stamp and 
@@ -61,6 +72,7 @@ class Processor:
         corresponding to its name from the first line 
         of data_recorder_out file 
     '''
+    # TODO don't think this used any where 
     @staticmethod
     def initialize_processor_index_dic(data):
         for i in range(2, len(data)):
@@ -106,9 +118,10 @@ class Processor:
                 return element
         return None
 
+    # TODO don't think this helps with anything 
     @staticmethod
     def set_time(time): 
-        Processor.time_index = time
+        Processor.time = time
 
     '''
         the function return the processor object for 
@@ -152,6 +165,9 @@ class Processor:
             ax.add_collection(Processor.buffer_num_write_patch_collection)
             TerminalGUI.print_func("Processor map changed to "+time+" ps.")
 
+    '''
+        Function used to removed the old buffer patch collections 
+    '''
     @staticmethod
     def clean_graph():
         if Processor.stalled_state_patch_collection_1:
@@ -163,54 +179,18 @@ class Processor:
         if Processor.buffer_num_write_patch_collection:
             Processor.buffer_num_write_patch_collection.remove()
 
+
     def get_processor_graph_obj_coordinates(self):
         if self.processor_graph_obj == None:
             return -1 
-        return self.processor_graph_obj.x_coordinate, \
-            self.processor_graph_obj.y_coordinate
+        return self.processor_graph_obj.get_coordinates()
 
-    def update_buffer_patches(self, time):
-        num_write_0 = self.access_processor_data(time, 'input_buffers[0].num_writes')
-        num_write_1 = self.access_processor_data(time, 'input_buffers[1].num_writes')
-        num_read_0 = self.access_processor_data(time, 'input_buffers[0].num_reads')
-        num_read_1 = self.access_processor_data(time, 'input_buffers[1].num_reads')
-
-        return self.processor_graph_obj.update_buffer_patches(num_write_0, num_write_1, num_read_0, num_read_1)
-
-    def update_stalled_state_patches(self, time): 
-        stalled_state = self.access_processor_data(time, "stalled")
-        stalled_state_patch = self.processor_graph_obj.get_stalled_state_patch()
-        return stalled_state_patch, stalled_state
-
-    @staticmethod
-    def update_all_buffer_patches(processor_object_list, time):
-        list1 = []
-        list2 = []
-
-        for processor in processor_object_list:
-            num_write_0_graph_obj, num_write_1_graph_obj, num_read_0_graph_obj, num_read_1_graph_obj \
-                = processor.update_buffer_patches(time)
-            list1 += [num_write_0_graph_obj, num_write_1_graph_obj]
-            list2 += [num_read_0_graph_obj, num_read_1_graph_obj]
-        
-        return list1, list2
-
-    @staticmethod
-    def update_all_stalled_state_patches(processor_obj_list, time):
-        list1 = []
-        list2 = []
-        for processor in processor_obj_list:
-            stalled_state_patch, stalled_state = processor.update_stalled_state_patches(time)
-            if stalled_state == 1:
-                list1 += [stalled_state_patch]
-            else:
-                list2 += [stalled_state_patch]
-        return list1, list2
 
     '''
         Function returns the data for a processor state at a given time
+        in the dictionary format 
     '''
-    def get_data_dictionary(self,time): 
+    def get_data_dictionary(self, time): 
         data_dic = {}
         for key in self.data.keys(): 
             data_dic[key] = self.access_processor_data(time, key)
@@ -218,10 +198,68 @@ class Processor:
         return data_dic
 
 
+    '''
+        Function gets the buffer states for the porcessor 
+        And updates the patches 
+    '''
+    def update_buffer_patches(self, time):
+        num_write_0 = self.access_processor_data(time, 'input_buffers[0].num_writes')
+        num_write_1 = self.access_processor_data(time, 'input_buffers[1].num_writes')
+        num_read_0 = self.access_processor_data(time, 'input_buffers[0].num_reads')
+        num_read_1 = self.access_processor_data(time, 'input_buffers[1].num_reads')
+
+        # returning the updated patches 
+        return self.processor_graph_obj.update_buffer_patches(num_write_0, num_write_1, num_read_0, num_read_1)
+
+
+    # function returns the stalled state and its patch object for a given processor 
+    def update_stalled_state_patches(self, time): 
+        stalled_state = self.access_processor_data(time, "stalled")
+        stalled_state_patch = self.processor_graph_obj.get_stalled_state_patch()
+        return stalled_state_patch, stalled_state
+
+
+    '''
+        Function updates the buffer patches for all the processors 
+        for the given time 
+    '''
+    @staticmethod
+    def update_all_buffer_patches(processor_object_list, time):
+        list1 = []
+        list2 = []
+
+        for processor in processor_object_list:
+            # getting the buffer values for the given time 
+            # updating the patch object 
+            num_write_0_graph_obj, num_write_1_graph_obj, num_read_0_graph_obj, num_read_1_graph_obj \
+                = processor.update_buffer_patches(time)
+            list1 += [num_write_0_graph_obj, num_write_1_graph_obj]
+            list2 += [num_read_0_graph_obj, num_read_1_graph_obj]
+        
+        return list1, list2
+
+
+    '''
+        Function updates the stalled state patches for all the processors 
+        for the given time 
+    '''
+    @staticmethod
+    def update_all_stalled_state_patches(processor_obj_list, time):
+        list1 = []
+        list2 = []
+        for processor in processor_obj_list: 
+            stalled_state_patch, stalled_state = processor.update_stalled_state_patches(time)
+            if stalled_state == 1:
+                list1 += [stalled_state_patch]
+            else:
+                list2 += [stalled_state_patch]
+        return list1, list2
+
+
 class ProcessorGraph:
 
-    # TODO add settings 
     def __init__(self, x_coordinate, y_coordinate, name):
+        # used to create annotation 
         self.name = name
         self.x_coordinate = int(x_coordinate)+100
         self.y_coordinate = int(y_coordinate)+100
@@ -236,6 +274,8 @@ class ProcessorGraph:
         self.patches_list = []
         self.processor_label = None
 
+        # TODO update these settings using 
+        # settings 
         self.max_buffer_value = 14500.0
         self.dimension = 800
         self.radius = 75 
@@ -243,6 +283,8 @@ class ProcessorGraph:
     # This function create patches and annotations 
     # for the a processor given processor coordinates 
     def map(self, ax):
+        # figure for the outter rectangle of the processors 
+        # int th processor maps 
         outer_rec = Rectangle(xy=(self.x_coordinate, self.y_coordinate),
             width=self.dimension,
             height=self.dimension,
@@ -251,6 +293,7 @@ class ProcessorGraph:
             edgecolor='#d3d3d3',
             linewidth=2)
         ax.add_artist(outer_rec)
+
         self.patches_list += [Rectangle((self.x_coordinate, self.y_coordinate),
                                 self.dimension/4, 0),
                               Rectangle((self.x_coordinate+(self.dimension/4),
@@ -263,7 +306,8 @@ class ProcessorGraph:
                                 self.y_coordinate),
                                 self.dimension/4, 0),
                               Circle(xy=(int(self.x_coordinate)+(7*self.dimension/8),
-                                int(self.y_coordinate)+(7*self.dimension/8)), radius=self.radius)]
+                                int(self.y_coordinate)+(7*self.dimension/8)),
+                                radius=self.radius)]
 
         self.processor_label = plt.annotate(self.name,
                                 xy=(self.x_coordinate+self.dimension/2, self.y_coordinate-150),
@@ -273,7 +317,7 @@ class ProcessorGraph:
         return self.patches_list
 
     # function updates the size of the buffer patches on the map 
-    # for the given time 
+    # to the given buffer value 
     def update_buffer_patches(self, num_write_0, num_write_1, num_read_0, num_read_1):
 
         # only useds 80% of the self.dimention to represent buffer 
@@ -295,3 +339,7 @@ class ProcessorGraph:
     # function returns the stalled state patch 
     def get_stalled_state_patch(self): 
         return self.patches_list[4]
+
+    def get_coordinates(self): 
+        return self.x_coordinate, \
+            self.y_coordinate
