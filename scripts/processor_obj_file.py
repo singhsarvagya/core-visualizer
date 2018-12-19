@@ -284,7 +284,6 @@ class ProcessorGraph:
         self.patches_list = []
         self.processor_label = None
 
-        # TODO update these settings using 
         # settings 
         self.max_buffer_value \
             = float(processor_object_settings['max_buffer_value'])

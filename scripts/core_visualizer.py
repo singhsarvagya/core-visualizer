@@ -45,7 +45,8 @@ class CoreVisualizer:
                         self.processor_map,
                         self.processor_graphs,
                         self.processor_obj_list,
-                        self.settings.get_project_title())
+                        self.settings.get_project_title(), 
+                        self.settings.get_gui_settings())
 
     '''
         Function reads the data recorder out file 

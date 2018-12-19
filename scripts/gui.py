@@ -13,7 +13,8 @@ class GUI:
         processor_map,
         processor_graphs,
         processor_obj_list, 
-        title):
+        title, 
+        gui_settings):
 
         # initializing the tkinter root window 
         self.root = root
@@ -31,7 +32,12 @@ class GUI:
         # initializing the other GUI objest 
         self.terminal_gui_obj = TerminalGUI(self.root)
         self.menu_gui = MenuGUI(self.root, processor_map.fig)
-        self.toolbar = ToolBar(root, processor_map.ax, processor_map.fig, processor_obj_list, processor_graphs)
+        self.toolbar = ToolBar(root,
+            processor_map.ax,
+            processor_map.fig,
+            processor_obj_list,
+            processor_graphs, 
+            gui_settings)
 
     # packing all the gui objects 
     def pack(self):
@@ -93,7 +99,12 @@ class MenuGUI:
 '''
 class ToolBar:
 
-    def __init__(self, root, ax, figure, processor_obj_list, processor_graphs):
+    def __init__(self, root, ax,
+        figure,
+        processor_obj_list,
+        processor_graphs, 
+        gui_settings):
+
         self.root = root
         self.toolbar = Frame(root)
         self.figure = figure
@@ -124,8 +135,8 @@ class ToolBar:
         # processor object list 
         self.processor_obj_list = processor_obj_list
         self.processor_graphs = processor_graphs
-        # TODO set intial step size 
-        self.step_size = 20
+        
+        self.step_size = int(gui_settings['step_size'])
 
     def pack(self):
         self.toolbar.pack(side=TOP, fill=X)

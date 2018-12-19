@@ -62,3 +62,12 @@ class Settings:
 			processor_object_settings = field.attrib
 
 		return processor_object_settings
+
+	def get_gui_settings(self): 
+		# function to get the gui settings from the
+		# settings.xml 
+		gui_settings = {}
+		for field in self.tree.iter('gui_settings'):
+			gui_settings = field.attrib
+
+		return gui_settings

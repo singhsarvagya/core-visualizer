@@ -30,7 +30,7 @@ class TerminalGUI:
         TerminalGUI.text.config(state=NORMAL)
         TerminalGUI.text.delete('1.0', END)
         TerminalGUI.text.config(state=DISABLED)
-        self.textFrame.pack(side=TOP)
+        self.textFrame.pack(side=BOTTOM)
 
     '''
         To remove the text frame from the GUI

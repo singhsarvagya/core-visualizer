@@ -45,4 +45,7 @@
 		processor_size= "800.0"
 		stalled_state_radius = "60.0"
 	/>
+	<gui_settings 
+		step_size="10"
+	/>
 </settings>
