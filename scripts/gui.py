@@ -44,7 +44,6 @@ class GUI:
         self.toolbar.pack()
         self.processor_map.pack()
         self.processor_graphs.pack()
-        # TODO pack the terminal in the right place 
         self.terminal_gui_obj.pack()
 
 '''
@@ -135,7 +134,7 @@ class ToolBar:
         # processor object list 
         self.processor_obj_list = processor_obj_list
         self.processor_graphs = processor_graphs
-        
+
         self.step_size = int(gui_settings['step_size'])
 
     def pack(self):

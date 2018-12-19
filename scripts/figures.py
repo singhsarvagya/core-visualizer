@@ -103,7 +103,7 @@ class ProcessorGraphs:
     def pack(self):
         for i in range(0, len(self.graph_settings)): 
             self.set_subplots(i)
-        self.canvas.get_tk_widget().pack(side=RIGHT, fill=BOTH, expand=1)
+        self.canvas.get_tk_widget().pack(side=LEFT, fill=BOTH, expand=1)
 
     '''
         Function is used to print the processor state

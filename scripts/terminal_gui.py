@@ -14,7 +14,7 @@ class TerminalGUI:
             textFrame:  frame alotted on the GUI to display this text board
             scrollbar: To add scroll feature to the text board
         '''
-        self.textFrame = Frame(root, borderwidth=4, relief=GROOVE, width=700, height=300)
+        self.textFrame = Frame(root, borderwidth=4, relief=GROOVE, width=300, height=1200)
         self.textFrame.pack_propagate(False)
         scrollbar = Scrollbar(self.textFrame)
 
@@ -25,12 +25,11 @@ class TerminalGUI:
         This function is used to pack the Terminal into the GUI.
         It also clear the text widget for the new project.
     '''
-    # TODO work on packing of the terminal GUI 
     def pack(self):
         TerminalGUI.text.config(state=NORMAL)
         TerminalGUI.text.delete('1.0', END)
         TerminalGUI.text.config(state=DISABLED)
-        self.textFrame.pack(side=BOTTOM)
+        self.textFrame.pack(side=BOTTOM, fill=Y)
 
     '''
         To remove the text frame from the GUI
@@ -49,6 +48,6 @@ class TerminalGUI:
     def print_func(string):
         TerminalGUI.text.config(state=NORMAL)
         TerminalGUI.text.insert(END, string+"\n")
-        TerminalGUI.text.insert(END, "------------------------------------------------\n")
+        TerminalGUI.text.insert(END, "---------------------------------------\n")
         TerminalGUI.text.yview(END)
         TerminalGUI.text.config(state=DISABLED)
