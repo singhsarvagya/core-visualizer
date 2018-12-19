@@ -54,3 +54,11 @@ class Settings:
 		graph_settings = sorted(graph_settings, key=lambda k: k['id'])
 		
 		return graph_settings
+
+	def get_processor_object_settings(self): 
+		# function to get settings for the processor map
+		processor_object_settings = {}
+		for field in self.tree.iter('processor_object_settings'):
+			processor_object_settings = field.attrib
+
+		return processor_object_settings

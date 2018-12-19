@@ -103,7 +103,8 @@ class CoreVisualizer:
     '''
     def draw_processors(self):
         self.processor_map.draw(self.processor_obj_list,
-            self.settings.get_processor_coordinate_file_loc())
+            self.settings.get_processor_coordinate_file_loc(),
+            self.settings.get_processor_object_settings())
         
     '''
         Function packs the GUI 

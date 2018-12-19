@@ -9,7 +9,6 @@ from terminal_gui import TerminalGUI
 PM_FIGURE_ID = 1
 SPM_FIGURE_ID = 2
 
-# TODO update the subplot to a marker when user timesteps into it 
 
 class ProcessorMap:
     def __init__(self, root):
@@ -27,7 +26,7 @@ class ProcessorMap:
         self.canvas = FigureCanvasTkAgg(self.fig, master=root)
         self.canvas.show()
 
-    def draw(self, processor_obj_list, processor_coordinate_file_loc):
+    def draw(self, processor_obj_list, processor_coordinate_file_loc, processor_object_settings):
         plt.figure(PM_FIGURE_ID)
 
         lines = tuple(open(processor_coordinate_file_loc, 'r'))
@@ -41,7 +40,8 @@ class ProcessorMap:
             processor = processor_obj_list[Processor.processor_index_dic[data[0]]]
             patch_list += processor.map_processor_graph_object(data[2],
                 data[1],
-                self.ax)
+                self.ax,
+                processor_object_settings)
 
         p = PatchCollection(patch_list, facecolor='none')
         self.ax.add_collection(p)
@@ -52,6 +52,7 @@ class ProcessorMap:
 
 
 class ProcessorGraphs:
+
     def __init__(self, root, settings):
         self.fig = plt.figure(SPM_FIGURE_ID)
 

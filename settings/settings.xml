@@ -40,8 +40,9 @@
 			data_field = "power_mW"
 		/>
 	</graph_settings>
-	<processor_object_settings>
-		<max_buffer value="14500.0"/>
-		<processor_size value="800.0"/>
-	</processor_object_settings>
+	<processor_object_settings 
+		max_buffer_value = "14500.0"
+		processor_size= "800.0"
+		stalled_state_radius = "60.0"
+	/>
 </settings>

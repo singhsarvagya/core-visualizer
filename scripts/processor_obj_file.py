@@ -12,15 +12,15 @@ class Processor:
         time_period_list:           List if timestamps in accending order
         processor_index_dic:        dictionary of processor name->index
                                     in the porcessor_object_list
-        
+        time_index:                 Used to initialize the time_index_list 
+        current_time_index:         used to store the current time index 
+                                    of the processor 
 
     '''
     time_period_index_dic = {}
     time_period_list = []
     processor_index_dic = {}
-    # TODO check if used 
     time_index = 0
-    # CHecked if used 
     current_time_index = 0
     # patch collection objects for buffer 
     # and stalled states for visualization 
@@ -86,7 +86,6 @@ class Processor:
         corresponding to its name from the first line 
         of data_recorder_out file 
     '''
-    # TODO don't think this used any where 
     @staticmethod
     def initialize_processor_index_dic(data):
         for i in range(2, len(data)):
@@ -118,8 +117,11 @@ class Processor:
         function creates a processor graph object for a given 
         processors and maps it to a subplot 
     '''
-    def map_processor_graph_object(self, x_coordinate, y_coordinate, ax):
-        self.processor_graph_obj = ProcessorGraph(x_coordinate, y_coordinate, self.name)
+    def map_processor_graph_object(self, x_coordinate, y_coordinate, ax, processor_object_settings):
+        self.processor_graph_obj = ProcessorGraph(x_coordinate,
+            y_coordinate,
+            self.name,
+            processor_object_settings)
         return self.processor_graph_obj.map(ax)
 
     '''
@@ -266,7 +268,7 @@ class Processor:
 
 class ProcessorGraph:
 
-    def __init__(self, x_coordinate, y_coordinate, name):
+    def __init__(self, x_coordinate, y_coordinate, name, processor_object_settings):
         # used to create annotation 
         self.name = name
         self.x_coordinate = int(x_coordinate)+100
@@ -284,9 +286,12 @@ class ProcessorGraph:
 
         # TODO update these settings using 
         # settings 
-        self.max_buffer_value = 14500.0
-        self.dimension = 800
-        self.radius = 75 
+        self.max_buffer_value \
+            = float(processor_object_settings['max_buffer_value'])
+        self.dimension \
+            = float(processor_object_settings['processor_size'])
+        self.radius \
+            = float(processor_object_settings['stalled_state_radius'])
 
     # This function create patches and annotations 
     # for the a processor given processor coordinates 
