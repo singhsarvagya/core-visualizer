@@ -85,11 +85,8 @@ class MenuGUI:
     '''
         Function on the main menu. Can be used to open help manual
     '''
-    # TODO bug here 
-    # in linux
-    # works fine in windows 
     def help_func(self):
-        subprocess.Popen(["~/core-visualizer/help.txt"], shell=True)
+        os.system("gedit README.md")
 
 '''
     Class for toolbar GUI
@@ -137,16 +134,20 @@ class ToolBar:
         Jumps to next step. Step size can be adjusted
     '''
     def update_next(self):
+        # updating the processor map 
         Processor.update_processor_map(self.processor_obj_list, self.ax, Processor.current_time_index+self.step_size)
         self.figure.canvas.draw()
+        # updating the processor graph 
         self.processor_graphs.update(None, self.processor_obj_list)
 
     '''
         Jumps to previous step. Size of the step can be adjusted
     '''
     def update_prev(self):
+        # updating the processor map 
         Processor.update_processor_map(self.processor_obj_list, self.ax, Processor.current_time_index-self.step_size)
         self.figure.canvas.draw()
+        # updating the processor graphs 
         self.processor_graphs.update(None, self.processor_obj_list)
 
     '''
@@ -160,7 +161,7 @@ class ToolBar:
 
     def change_time_range(self): 
         time_min = 0.0
-        time_max = 2.0
+        time_max = 0.1
         time_min = simpledialog.askfloat("Graph Time Range", "Enter lower limit for the time range:")
         time_max = simpledialog.askfloat("Graph Time Range", "Enter higher limit for the time range:")
 
@@ -179,15 +180,21 @@ class ToolBar:
         # setting up the time range 
         self.processor_graphs.set_graph_time_range(time_min, time_max)
 
+        # updating the processor graph cursor for the 
+        # time period range change 
         min_time = Processor.time_period_list[-1] 
         index = -1 
 
+        # finding the min time higher than loxer time limit 
         for i in range(0, len(Processor.time_period_list)):
             if time_min < Processor.time_period_list[i] and \
                 min_time > Processor.time_period_list[i]: 
                 min_time = Processor.time_period_list[i] 
                 index = i 
 
+        #  if a good min time is found then update 
+        # the processor graph and the map to the min time 
         if index != -1: 
             Processor.update_processor_map(self.processor_obj_list, self.ax, index)
+            self.figure.canvas.draw()
             self.processor_graphs.update(None, self.processor_obj_list)
