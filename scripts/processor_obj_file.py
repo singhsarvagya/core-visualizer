@@ -132,11 +132,6 @@ class Processor:
                 return element
         return None
 
-    # TODO don't think this helps with anything 
-    @staticmethod
-    def set_time(time): 
-        Processor.time = time
-
     '''
         the function return the processor object for 
         a given processor name 

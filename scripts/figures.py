@@ -50,7 +50,7 @@ class ProcessorMap:
     def pack(self):
         self.canvas.get_tk_widget().pack(side=LEFT, fill=BOTH, expand=1)
 
-# TODO X range 
+
 class ProcessorGraphs:
     def __init__(self, root, settings):
         self.fig = plt.figure(SPM_FIGURE_ID)
@@ -77,14 +77,20 @@ class ProcessorGraphs:
     def set_graph_time_range(self, time_min, time_max): 
         self.time_min = time_min
         self.time_max = time_max
-        Processor.set_time(self.time_min)
 
+
+    '''
+        Function create the suplots for the processor garphs
+    '''
     def create_subplots(self):
         subplot_id = 511
         for i in range(0, len(self.graph_settings)):
             self.subplots.append(self.fig.add_subplot(subplot_id, aspect=0.225))
             subplot_id += 1
 
+    '''
+        Function set the subplot labels and axis's 
+    '''
     def set_subplots(self, index):
         self.subplots[index].set_xbound(0.0, self.x_max_bound)
         self.subplots[index].set_ybound(-0.1, self.y_max_bound)
@@ -98,6 +104,10 @@ class ProcessorGraphs:
             self.set_subplots(i)
         self.canvas.get_tk_widget().pack(side=RIGHT, fill=BOTH, expand=1)
 
+    '''
+        Function is used to print the processor state
+        when the processor graphs are updated
+    '''
     def print_processor_state(self, processor): 
         # printing the clicked processor details on the terminal 
         time = Processor.get_time(Processor.current_time_index)
@@ -111,17 +121,25 @@ class ProcessorGraphs:
 
         TerminalGUI.print_func(msg)
 
-    def refactor_graph_data(self, data, time_list, time): 
+    '''
+        The function is used to refactor the data for the graphs 
+        so that it cleanly fits in the subplots 
+    '''
+    def refactor_graph_data(self, data, time_list, time_cursor): 
         data_new = []
         time_list_new = []
-        time_new = time
+        time_cursor_new = time_cursor
         for i in range(0, len(time_list)): 
-            if time_list[i] >=self.time_min and time_list[i] <= self.time_max: 
+            # filtering out the time only between the time range 
+            # defined by the user 
+            if time_list[i] >=self.time_min and time_list[i] <= self.time_max:
+                # reagjusting the time so that the whole graph can fit in the time range  
                 time_list_new.append((time_list[i]-self.time_min)*(self.x_max_bound/(self.time_max - self.time_min)))
                 data_new.append(data[i])
-        time_new = (time - self.time_min)*(self.x_max_bound/(self.time_max - self.time_min))
+        # updating the position of the time cursor based on the time range 
+        time_cursor_new = (time_cursor - self.time_min)*(self.x_max_bound/(self.time_max - self.time_min))
         
-        return data_new, time_list_new, time_new
+        return data_new, time_list_new, time_cursor_new
 
     def update(self, proc_name, processor_obj_list):
         if proc_name == None: 
@@ -129,25 +147,33 @@ class ProcessorGraphs:
 
         processor_obj = Processor.get_processor_obj(proc_name, processor_obj_list)
         self.current_processor = proc_name
-        # getting the cuurent processor map time 
-        time = float(Processor.get_time(Processor.current_time_index))
+        # getting the cuurent processor map time for time cursor 
+        time_cursor = float(Processor.get_time(Processor.current_time_index))
 
         if processor_obj:
             for i in range(0, len(self.graph_settings)):
+                # cleanign the previous graph from the subplot 
                 self.subplots[i].clear()
+                # scaling the data so that it fits in the plot 
                 scale_factor = float(self.graph_settings[i]['scale_factor'])
                 data = [data*scale_factor for data in processor_obj.data[self.graph_settings[i]['data_field']]]
                 time_list = Processor.time_period_list
 
-                data, time_list, time_new = self.refactor_graph_data(data, time_list, time)
+                # refactoring the data so that only the data for the selected time range is 
+                # displayed 
+                data, time_list, time_new = self.refactor_graph_data(data, time_list, time_cursor)
 
+                # ploting the graph 
                 self.subplots[i].plot(time_list,
                         data,
                         color="#00adce",
                         linewidth=0.5)
+                # plotting the time cursor 
                 self.subplots[i].plot((time_new, time_new), (0, 2.70),
                         color="#FF0000",
                         linewidth=0.75)
+                # settign the subplots 
                 self.set_subplots(i)
+            # printing the processor states 
             self.print_processor_state(processor_obj)
             self.canvas.draw()
