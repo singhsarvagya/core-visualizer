@@ -9,15 +9,21 @@ class Processor:
         time_period_index_dic:      Is a dictionary of timestamp to index of
                                     data in the processor.data[data_field]
                                     corresponding to this time stamps
-        time_period_list:           List if timestamps in accending order in secs
-        processor_index_dic: 
+        time_period_list:           List if timestamps in accending order
+        processor_index_dic:        dictionary of processor name->index
+                                    in the porcessor_object_list
+        
 
     '''
     time_period_index_dic = {}
     time_period_list = []
     processor_index_dic = {}
+    # TODO check if used 
     time_index = 0
+    # CHecked if used 
     current_time_index = 0
+    # patch collection objects for buffer 
+    # and stalled states for visualization 
     buffer_num_read_patch_collection = None
     buffer_num_write_patch_collection = None
     stalled_state_patch_collection_1 = None
@@ -41,10 +47,18 @@ class Processor:
             Processor.time_index += 1
         Processor.time_period_list.sort()
 
+    '''
+        function returns the number of processors 
+    '''
     @staticmethod
     def get_num_of_processors(): 
         return len(Processor.processor_index_dic.keys())
 
+    '''
+        function returns the name of the processor 
+        for a given set of coordinate from the 
+        coordinate map 
+    '''
     @ staticmethod
     def get_processor_name(processor_obj_list, x, y):
         for processor in processor_obj_list:
@@ -182,7 +196,7 @@ class Processor:
 
     def get_processor_graph_obj_coordinates(self):
         if self.processor_graph_obj == None:
-            return -1 
+            return None
         return self.processor_graph_obj.get_coordinates()
 
 
@@ -194,7 +208,6 @@ class Processor:
         data_dic = {}
         for key in self.data.keys(): 
             data_dic[key] = self.access_processor_data(time, key)
-
         return data_dic
 
 
