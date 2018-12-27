@@ -7,7 +7,7 @@ Ubuntu 16.04
 
 ## Installing dependencies 
 
-Just go to the terminal and run the install-deps.sh like follow: 
+Just go to your project folder in the terminal and run the install-deps.sh like following. You might need to enter your password to run the sudo commands. 
 
 `./install-deps.sh`
 
@@ -16,6 +16,14 @@ The script might not have execute permissions. For that run the command below an
 `chmod 700 install-deps.sh`
 
 ## Running the project 
+
+You can run the project by using the run.sh script as follows: 
+
+`./run.sh`
+
+The script might not have execute permissions. For that run the command below and rerun the run scripts: 
+
+`chmod 700 run.sh`
 
 ## Processor Map
 
