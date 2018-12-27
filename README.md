@@ -27,14 +27,18 @@ The script might not have execute permissions. For that run the command below an
 
 ## Processor Map
 
+The processor map is used to visualize the buffer and stalled state of the graph. The user can use prev and next buttons to jump to the next time and the processor map will be updated accordingly. 
+
 ## Processor Graphs 
+
+The processor graphs are used to visualize Activity, Utilization, Stalled State and Power of individual processor. The user can simply click on a processor on the processor map and the processor garphs will be updated accordingly. The red marker on the processor graphs indicates the current timestep of the processor map. The user can adjust the time range to look at the specific portion of the processor graphs. 
 
 ## Toolbar
 
-* Prev 
-* Next 
-* Step Size 
-* Time Range 
+* Prev: The user can jump to the previous time step using this button 
+* Next: The user can jump to the next time step using this button 
+* Step Size: The user can change the timestep jump size using this button. Hence, the user can control size of time steps when they use prev or next buttons.
+* Time Range: Here the user can define the time range for the graphs so that the user can look at the specific portions of the graphs in more detail. 
 
 ## Setting.xml 
 
