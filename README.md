@@ -8,9 +8,11 @@ Ubuntu 16.04
 ## Installing dependencies 
 
 Just go to the terminal and run the install-deps.sh like follow: 
+
 `./install-deps.sh`
 
 The script might not have execute permissions. For that run the command below and rerun the install-deps scripts: 
+
 `chmod 700 install-deps.sh`
 
 ## Running the project 
