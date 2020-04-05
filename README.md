@@ -1,7 +1,7 @@
 # Core Visualizer
 This application is used for visualizing the runtime data from the Kilocore processor to analyze the application algorithm structure. It visualized the input and output buffers of a core as well as Activity, Utilization, Stalled State and Power which gives the user essential information about the runtime efficiency on the Kilocore processor.
 
-![alt text](https://github.com/sarvagya-vatsal/core-visualizer/blob/master/images/gui.png)
+![alt text](https://github.com/singhsarvagya/core-visualizer/blob/master/images/gui.png)
 
 
 ## Environment 
@@ -32,14 +32,14 @@ The script might not have execute permissions. For that run the command below an
 
 The processor map is used to visualize the buffer and stalled state of the graph. The user can use prev and next buttons to jump to the next time and the processor map will be updated accordingly. 
 
-![alt text](https://github.com/sarvagya-vatsal/core-visualizer/blob/master/images/processor_map.png)
+![alt text](https://github.com/singhsarvagya/core-visualizer/blob/master/images/processor_map.png)
 
 
 ## Processor Graphs 
 
 The processor graphs are used to visualize Activity, Utilization, Stalled State and Power of individual processor. The user can simply click on a processor on the processor map and the processor garphs will be updated accordingly. The red marker on the processor graphs indicates the current timestep of the processor map. The user can adjust the time range to look at the specific portion of the processor graphs. 
 
-![alt text](https://github.com/sarvagya-vatsal/core-visualizer/blob/master/images/processor_graphs.png)
+![alt text](https://github.com/singhsarvagya/core-visualizer/blob/master/images/processor_graphs.png)
 
 
 ## Toolbar
@@ -83,4 +83,4 @@ Here you need to define the location of the user generated file that contains th
 You can use the GUI settings to define the initial time steps size for the application.
 
 ## Contributor 
-* Sarvagya Singh (sarvagya.vatsal@gmail.com, sarsing@ucdavis.edu)
+* Sarvagya Singh (sarvagya.vatsal@gmail.com)
